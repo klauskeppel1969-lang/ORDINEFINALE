@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Gestione ordini settimanali materiale colazioni hotel">
+  
+  <title>Ordini Colazione Hotel</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥐</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white'>🥐</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <div id="connection-status" class="connection-status local">● Locale</div>
+
+  <!-- VISTE PRINCIPALI -->
+  <div id="view-main">
+
+    <header class="header">
+      <div class="header-top">
+        <div>
+          <div class="header-title">🥐 Ordini Colazione Hotel</div>
+          <div class="header-subtitle">Checklist materiale settimanale</div>
+        </div>
+        <div class="header-nav-btns">
+          <button class="nav-icon-btn" onclick="showView('storico')" title="Storico ordini">📋</button>
+          <button class="nav-icon-btn" onclick="showView('statistiche')" title="Statistiche">📊</button>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat"><span>Selezionati:</span><span class="stat-value" id="selected-count">0</span></div>
+        <div class="stat"><span>Quantità tot:</span><span class="stat-value" id="total-qty">0</span></div>
+      </div>
+    </header>
+
+    <div class="filters-bar" id="filters-bar">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Tutti</button>
+      <button class="filter-btn" data-filter="selected" onclick="setFilter('selected')">Da ordinare</button>
+      <button class="filter-btn" data-filter="Yogurt" onclick="setFilter('Yogurt')">🍶 Yogurt</button>
+      <button class="filter-btn" data-filter="Dolcificanti" onclick="setFilter('Dolcificanti')">🍯 Dolcif.</button>
+      <button class="filter-btn" data-filter="Bevande Calde" onclick="setFilter('Bevande Calde')">☕ Bev.Calde</button>
+      <button class="filter-btn" data-filter="Marmellate" onclick="setFilter('Marmellate')">🍓 Marm.</button>
+      <button class="filter-btn" data-filter="Cornetti e Dolci" onclick="setFilter('Cornetti e Dolci')">🥐 Cornetti</button>
+      <button class="filter-btn" data-filter="Cereali" onclick="setFilter('Cereali')">🌾 Cereali</button>
+      <button class="filter-btn" data-filter="Concentrati" onclick="setFilter('Concentrati')">🥛 Latte/Succhi</button>
+      <button class="filter-btn" data-filter="Torte" onclick="setFilter('Torte')">🎂 Torte</button>
+      <button class="filter-btn" data-filter="Salato" onclick="setFilter('Salato')">🥩 Salato</button>
+      <button class="filter-btn" data-filter="Senza Glutine" onclick="setFilter('Senza Glutine')">🌿 S/Glutine</button>
+      <button class="filter-btn" data-filter="Biscotti" onclick="setFilter('Biscotti')">🍪 Biscotti</button>
+      <button class="filter-btn" data-filter="Materiali" onclick="setFilter('Materiali')">🧻 Materiali</button>
+    </div>
+
+    <div class="print-header">
+      <h1>🥐 Ordine Colazione Hotel Apogeo</h1>
+      <p id="print-date"></p>
+    </div>
+
+    <main class="main-container">
+      <div id="items-container">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <div class="empty-state-text">Caricamento...</div>
+        </div>
+      </div>
+      <div class="add-extra-container">
+        <button class="add-extra-btn" onclick="showAddExtraModal()">➕ AGGIUNGI ARTICOLO EXTRA</button>
+      </div>
+    </main>
+
+    <div class="print-footer" id="print-footer"></div>
+
+    <div class="bottom-toolbar">
+      <button class="toolbar-btn success" onclick="confirmSaveOrder()">✅ Conferma</button>
+      <button class="toolbar-btn primary" onclick="showSharePanel()">📤 Invia</button>
+      <button class="toolbar-btn secondary" onclick="printOrder()">🖨️ Stampa</button>
+      <button class="toolbar-btn danger" onclick="confirmResetOrder()">🔄 Reset</button>
+    </div>
+
+  </div><!-- /view-main -->
+
+  <!-- VISTA STORICO -->
+  <div id="view-storico" style="display:none;">
+    <header class="header">
+      <div class="header-top">
+        <div>
+          <div class="header-title">📋 Storico Ordini</div>
+          <div class="header-subtitle">Ordini confermati</div>
+        </div>
+        <button class="nav-icon-btn" onclick="showView('main')" title="Torna all'ordine">✖️</button>
+      </div>
+    </header>
+    <main class="main-container" id="storico-container">
+      <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Caricamento...</div></div>
+    </main>
+  </div>
+
+  <!-- VISTA STATISTICHE -->
+  <div id="view-statistiche" style="display:none;">
+    <header class="header">
+      <div class="header-top">
+        <div>
+          <div class="header-title">📊 Statistiche</div>
+          <div class="header-subtitle">Analisi ordini storici</div>
+        </div>
+        <button class="nav-icon-btn" onclick="showView('main')" title="Torna all'ordine">✖️</button>
+      </div>
+    </header>
+    <main class="main-container" id="statistiche-container">
+      <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Caricamento...</div></div>
+    </main>
+  </div>
+
+  <!-- PANNELLO CONDIVISIONE -->
+  <div id="share-overlay" class="modal-overlay" onclick="if(event.target===this)closeSharePanel()">
+    <div class="modal" id="share-panel">
+      <div class="modal-header">
+        <span class="modal-title">📤 Invia Ordine</span>
+        <button class="modal-close" onclick="closeSharePanel()">×</button>
+      </div>
+      <div class="modal-body" id="share-body"></div>
+    </div>
+  </div>
+
+  <script src="firebase-config.js"></script>
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
