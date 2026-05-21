@@ -68,7 +68,7 @@ const STANDARD_PRODUCTS = [
   // TORTE E CIAMBELLONI
   // ========================================
   { id: "ciambellone-ciocc", name: "Ciambellone Galgani Variegato Cioccolato (preaffettato)", category: "Torte" },
-  { id: "crostata-bosco", name: "Mezza Crostata Galgani Frutti di Bosco Rotonda", category: "Torte" },
+  { id: "crostata-bosco", name: "Crostata Galgani Frutti di Bosco Rotonda", category: "Torte" },
 
   // ========================================
   // SALATO
