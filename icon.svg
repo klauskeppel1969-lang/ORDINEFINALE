@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Sfondo rosso -->
+  <rect width="100" height="100" fill="#cc0000"/>
+  <!-- Cerchio bianco -->
+  <circle cx="50" cy="50" r="42" fill="white"/>
+  <!-- K nera, bold, centrata -->
+  <text x="50" y="68" 
+        font-family="Arial Black, Arial, sans-serif" 
+        font-size="62" 
+        font-weight="900" 
+        text-anchor="middle" 
+        fill="black">K</text>
+</svg>
