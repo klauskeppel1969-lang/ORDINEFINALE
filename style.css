@@ -729,6 +729,7 @@ body {
    STILI PER STAMPA (Print CSS)
    ============================================================ */
 @media print {
+
   /* ── Nascondi tutto l'interfaccia ── */
   .header,
   .filters-bar,
@@ -742,139 +743,160 @@ body {
   .modal-overlay,
   .toast-container,
   .category-toggle,
-  .category-header,        /* ← niente intestazioni categoria */
+  .category-header,
   #view-storico,
   #view-statistiche,
   #share-overlay {
     display: none !important;
   }
 
-  /* ── Reset base ── */
   * {
     box-shadow: none !important;
-    color: #000 !important;
   }
 
-  body {
-    background: white;
+  html, body {
     margin: 0;
     padding: 0;
+    background: white;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 10pt;
   }
 
   .main-container {
     padding: 0;
+    margin: 0;
     max-width: 100%;
   }
 
-  /* ── Intestazione stampa ── */
+  /* ── Intestazione ── */
   .print-header {
     display: block !important;
-    text-align: left;
-    padding: 0 0 10pt 0;
-    border-bottom: 1.5pt solid #000;
-    margin-bottom: 10pt;
+    padding: 0 0 8pt 0;
+    margin-bottom: 8pt;
+    border-bottom: 2pt solid #000;
   }
 
   .print-header h1 {
-    font-size: 14pt;
+    font-size: 16pt;
     font-weight: 700;
-    margin: 0 0 3pt 0;
+    margin: 0 0 2pt 0;
+    color: #000;
   }
 
   .print-header p {
-    font-size: 9pt;
-    color: #444 !important;
+    font-size: 10pt;
+    color: #333;
     margin: 0;
   }
 
-  /* ── Categorie: solo il contenuto, niente header ── */
+  /* ── Categorie: niente header, solo contenuto ── */
   .category {
-    box-shadow: none;
+    background: transparent;
     border: none;
+    box-shadow: none;
     margin: 0;
     padding: 0;
-    background: transparent;
   }
 
   .category-items {
-    display: block !important; /* sempre espanse in stampa */
+    display: block !important;
   }
 
-  /* ── Righe articoli ──
-     Target: ~24 righe in A4 (area utile ~247mm).
-     Ogni riga = circa 10mm → padding 2.5mm sopra/sotto + font 10pt ≈ 3.5mm
-     Separatore = 1px border-bottom con margin-bottom 2mm
-  */
-  .item-row {
-    display: flex !important;
-    align-items: baseline;
-    padding: 2.5mm 0;
-    margin-bottom: 2mm;
-    border: none !important;
-    border-bottom: 0.5pt solid #ccc !important;
-    min-height: auto;
-    background: white !important;
-    border-left: none !important;
-    page-break-inside: avoid;
-  }
-
-  /* Nascondi articoli non selezionati */
+  /* ── Nascondi articoli non selezionati ── */
   .item-row:not(.selected) {
     display: none !important;
   }
 
-  /* Ultima riga visibile: niente border */
-  .item-row.selected:last-of-type {
-    border-bottom: none !important;
-    margin-bottom: 0;
-  }
-
-  .item-name {
-    flex: 1;
-    font-size: 10pt;
-    line-height: 1.2;
-  }
-
-  .extra-badge {
-    border: 0.5pt solid #666;
-    background: transparent;
-    color: #555 !important;
-    font-size: 7pt;
-  }
-
-  /* ── Quantità ── */
-  .print-qty {
-    display: block !important;
-    min-width: 50pt;
-    text-align: right;
-    font-weight: 700;
-    font-size: 10pt;
-  }
-
-  /* ── Note ── */
-  .item-note-preview {
-    display: block !important;
-    font-size: 8pt;
-    color: #555 !important;
-    font-style: italic;
-    margin-top: 1mm;
-  }
-
-  /* ── Nascondi categorie completamente vuote ── */
+  /* ── Categorie senza articoli selezionati ── */
   .category:not(:has(.item-row.selected)) {
     display: none !important;
   }
 
-  /* ── Footer stampa ── */
+  /*
+   * RIGA ARTICOLO
+   * Layout: [QTÀ] ── [NOME ARTICOLO]
+   * 
+   * Target: 24 righe su A4 (area utile ~247mm)
+   * Ogni riga = ~10mm: font 13pt (~4.5mm) + padding 2.5mm top/bottom
+   * Separatore border-bottom 1.5pt nero
+   */
+  .item-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 5pt 4pt !important;
+    margin: 0 !important;
+    border: none !important;
+    border-bottom: 1.5pt solid #000 !important;
+    background: white !important;
+    min-height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  /* Quantità: a sinistra, grassetto, larghezza fissa */
+  .print-qty {
+    display: block !important;
+    width: 52pt;
+    min-width: 52pt;
+    font-size: 13pt;
+    font-weight: 700;
+    color: #000;
+    text-align: right;
+    padding-right: 10pt;
+    flex-shrink: 0;
+  }
+
+  /* Separatore verticale tra quantità e nome */
+  .item-row::after {
+    content: '';
+    display: block;
+    width: 1pt;
+    height: 16pt;
+    background: #999;
+    margin-right: 10pt;
+    flex-shrink: 0;
+  }
+
+  /* Nome articolo */
+  .item-name {
+    flex: 1;
+    font-size: 13pt;
+    font-weight: 400;
+    color: #000;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  /* Badge extra */
+  .extra-badge {
+    border: 0.5pt solid #666;
+    background: transparent;
+    color: #555;
+    font-size: 7pt;
+    margin-left: 4pt;
+  }
+
+  /* Note */
+  .item-note-preview {
+    display: block !important;
+    font-size: 8pt;
+    color: #555;
+    font-style: italic;
+    margin-top: 1pt;
+  }
+
+  /* Prima riga: bordo anche in cima */
+  .category:has(.item-row.selected):first-of-type .item-row.selected:first-child {
+    border-top: 1.5pt solid #000 !important;
+  }
+
+  /* ── Footer ── */
   .print-footer {
     display: block !important;
-    margin-top: 10pt;
-    padding-top: 6pt;
-    border-top: 0.5pt solid #bbb;
+    margin-top: 8pt;
+    padding-top: 5pt;
+    border-top: 0.5pt solid #999;
     font-size: 8pt;
-    color: #555 !important;
+    color: #555;
     text-align: left;
   }
 }
