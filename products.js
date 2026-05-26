@@ -67,8 +67,8 @@ const STANDARD_PRODUCTS = [
   // ========================================
   // TORTE E CIAMBELLONI
   // ========================================
-  { id: "ciambellone-ciocc", name: "Ciambellone Galgani Variegato Cioccolato (preaffettato)", category: "Torte" },
-  { id: "crostata-bosco", name: "Mezza Crostata Galgani Frutti di Bosco Rotonda", category: "Torte" },
+  { id: "ciambellone-ciocc", name: " Mezzo Ciambellone Galgani Variegato Cioccolato (preaffettato)", category: "Torte" },
+  { id: "crostata-bosco", name: " Crostata Galgani Frutti di Bosco Rotonda", category: "Torte" },
 
   // ========================================
   // SALATO
@@ -88,6 +88,8 @@ const STANDARD_PRODUCTS = [
   // ========================================
   { id: "biscotti-oswego", name: "Biscotti Monodose Oswego", category: "Biscotti" },
   { id: "biscotti-gran-turchese", name: "Biscotti Monodose Gran Turchese", category: "Biscotti" },
+  { id: "biscotti-gran-turchese", name: "Biscotti Gran Mulino - MP Dolci", category: "Biscotti" },
+
 
   // ========================================
   // VARIE / MATERIALI
